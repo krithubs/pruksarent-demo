@@ -148,24 +148,55 @@ export default function HomePage() {
       </Reveal>
 
       <Reveal className="section container-page">
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-10 flex items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Blog</p>
             <h2 className="mt-2 text-3xl font-semibold">{locale === "th" ? "บทความล่าสุด" : "Latest articles"}</h2>
           </div>
           <Link href="/blog" className="btn-secondary">{t.blog}</Link>
         </div>
-        <div className="grid gap-5 md:grid-cols-3">
-          {blogs.slice(0, 3).map((post) => (
-            <Link href={`/blog/${post.slug}`} key={post.slug} className="card group overflow-hidden">
-              <div className="image-sheen"><img src={post.image} alt="" className="h-48 w-full object-cover transition duration-700 group-hover:scale-105" /></div>
-              <div className="p-5">
-                <span className="text-xs font-semibold text-pruksa-teal">{post.category}</span>
-                <h3 className="mt-2 font-semibold">{post.title[locale]}</h3>
-                <p className="mt-2 text-sm leading-6 text-black/60">{post.excerpt[locale]}</p>
+        <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+          {/* Featured post — large card with image overlay */}
+          {blogs[0] && (
+            <Link href={`/blog/${blogs[0].slug}`} className="group relative overflow-hidden rounded-2xl">
+              <div className="aspect-[4/3] overflow-hidden lg:aspect-auto lg:h-full">
+                <img src={blogs[0].image} alt={blogs[0].title[locale]} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">{blogs[0].category}</span>
+                  <span className="text-xs text-white/60">{blogs[0].minutes} min</span>
+                </div>
+                <h3 className="mt-3 text-xl font-semibold leading-snug text-white sm:text-2xl">{blogs[0].title[locale]}</h3>
+                <p className="mt-2 max-w-md text-sm leading-relaxed text-white/65">{blogs[0].excerpt[locale]}</p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-white transition group-hover:gap-2.5">
+                  {locale === "th" ? "อ่านต่อ" : "Read more"} <ArrowRight size={14} />
+                </span>
               </div>
             </Link>
-          ))}
+          )}
+          {/* Side posts — stacked */}
+          <div className="grid gap-6">
+            {blogs.slice(1, 3).map((post) => (
+              <Link href={`/blog/${post.slug}`} key={post.slug} className="group grid grid-cols-[140px_1fr] overflow-hidden rounded-2xl bg-white shadow-soft transition hover:shadow-lg sm:grid-cols-[180px_1fr]">
+                <div className="overflow-hidden">
+                  <img src={post.image} alt={post.title[locale]} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                </div>
+                <div className="flex flex-col justify-center p-4 sm:p-5">
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-pruksa-teal/10 px-2.5 py-0.5 text-[11px] font-medium text-pruksa-teal">{post.category}</span>
+                    <span className="text-[11px] text-black/35">{post.minutes} min</span>
+                  </div>
+                  <h3 className="mt-2 font-semibold leading-snug">{post.title[locale]}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-black/50 line-clamp-2">{post.excerpt[locale]}</p>
+                  <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-pruksa-green transition group-hover:gap-2.5">
+                    {locale === "th" ? "อ่านต่อ" : "Read more"} <ArrowRight size={14} />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </Reveal>
 
