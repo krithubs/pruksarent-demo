@@ -1,0 +1,66 @@
+[
+  {
+    "slug": "choose-rental-home-bangkok",
+    "category": "Tips",
+    "title": { "th": "เลือกบ้านเช่าในกรุงเทพอย่างไรให้เหมาะกับชีวิต", "en": "How to choose the right rental home in Bangkok" },
+    "excerpt": { "th": "เช็กทำเล งบประมาณ การเดินทาง และบริการหลังเข้าอยู่ก่อนตัดสินใจ", "en": "Location, budget, commute and service checks before renting." },
+    "minutes": 5,
+    "image": "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "slug": "condo-vs-townhome",
+    "category": "Lifestyle",
+    "title": { "th": "คอนโดหรือทาวน์โฮม แบบไหนเหมาะกับคุณ", "en": "Condo or townhome: which fits your lifestyle?" },
+    "excerpt": { "th": "เปรียบเทียบพื้นที่ ความเป็นส่วนตัว และค่าใช้จ่ายรายเดือน", "en": "Compare space, privacy and monthly costs." },
+    "minutes": 4,
+    "image": "https://images.unsplash.com/photo-1515263487990-61b07816b324?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "slug": "rental-market-2026",
+    "category": "Market Insights",
+    "title": { "th": "ภาพรวมตลาดเช่าที่อยู่อาศัยปี 2026", "en": "Bangkok rental market outlook 2026" },
+    "excerpt": { "th": "ทำเลรถไฟฟ้าและบ้านพร้อมอยู่ยังเป็นตัวเลือกหลักของผู้เช่า", "en": "Transit locations and ready-to-live homes remain key." },
+    "minutes": 6,
+    "image": "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "slug": "booking-online-guide",
+    "category": "How-to",
+    "title": { "th": "ขั้นตอนการจองยูนิตออนไลน์", "en": "A guide to online unit booking" },
+    "excerpt": { "th": "เลือกวัน ยืนยันยูนิต กรอกข้อมูล และรอเจ้าหน้าที่ติดต่อกลับ", "en": "Select a date, confirm unit, submit details and wait for follow-up." },
+    "minutes": 3,
+    "image": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "slug": "near-bts-rental",
+    "category": "Tips",
+    "title": { "th": "เช่าใกล้ BTS/MRT คุ้มค่าจริงไหม", "en": "Is renting near BTS/MRT worth it?" },
+    "excerpt": { "th": "คำนวณเวลาการเดินทางและค่าใช้จ่ายรวมก่อนเลือกทำเล", "en": "Evaluate commute time and total cost before choosing." },
+    "minutes": 4,
+    "image": "https://images.unsplash.com/photo-1531219572328-a0171b4448a3?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "slug": "pet-friendly-renting",
+    "category": "Lifestyle",
+    "title": { "th": "คู่มือเช่าบ้านสำหรับคนมีสัตว์เลี้ยง", "en": "Pet-friendly renting guide" },
+    "excerpt": { "th": "สิ่งที่ต้องถามก่อนเซ็นสัญญาและเลือกโครงการ", "en": "Questions to ask before signing and choosing a project." },
+    "minutes": 5,
+    "image": "https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "slug": "first-rental-checklist",
+    "category": "How-to",
+    "title": { "th": "Checklist ก่อนย้ายเข้าบ้านเช่า", "en": "Rental move-in checklist" },
+    "excerpt": { "th": "เอกสาร สัญญา อินเทอร์เน็ต และการตรวจรับห้อง", "en": "Documents, lease, internet and handover inspection." },
+    "minutes": 4,
+    "image": "https://images.unsplash.com/photo-1580894908361-967195033215?auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    "slug": "long-stay-benefits",
+    "category": "Market Insights",
+    "title": { "th": "ทำไมสัญญาเช่าระยะยาวจึงคุ้มกว่า", "en": "Why long-stay leases can be better value" },
+    "excerpt": { "th": "ดูส่วนลด ความเสถียรของค่าใช้จ่าย และบริการที่ได้รับ", "en": "Review discounts, stable costs and included services." },
+    "minutes": 5,
+    "image": "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?auto=format&fit=crop&w=1000&q=80"
+  }
+]

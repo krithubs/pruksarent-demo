@@ -1,0 +1,56 @@
+[
+  {
+    "slug": "summer-move-in",
+    "title": { "th": "ย้ายเข้าเลย รับฟรีค่าเช่าเดือนแรก", "en": "Move in now, get first month free" },
+    "type": "condo",
+    "badge": "HOT",
+    "summary": { "th": "สำหรับยูนิตที่ร่วมรายการในโครงการคอนโด", "en": "For selected condo units" },
+    "terms": { "th": "จองภายในเดือนนี้ เงื่อนไขเป็นไปตามบริษัทกำหนด", "en": "Book this month. Company terms apply." },
+    "image": "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "slug": "family-townhome",
+    "title": { "th": "ทาวน์โฮมครอบครัว ส่วนลดสูงสุด 20%", "en": "Family townhomes up to 20% off" },
+    "type": "townhome",
+    "badge": "FAMILY",
+    "summary": { "th": "แพ็กเกจเช่าระยะยาวพร้อมบริการดูแลบ้าน", "en": "Long-stay package with home care service" },
+    "terms": { "th": "สำหรับสัญญาเช่า 12 เดือนขึ้นไป", "en": "For leases of 12 months or longer." },
+    "image": "https://images.unsplash.com/photo-1600607687644-c7171b42498b?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "slug": "bts-lifestyle",
+    "title": { "th": "อยู่ใกล้รถไฟฟ้า เริ่ม 15,000 บาท", "en": "Near BTS from THB 15,000" },
+    "type": "apartment",
+    "badge": "CITY",
+    "summary": { "th": "เลือกโครงการใกล้ BTS/MRT เดินทางสะดวก", "en": "Choose transit-connected homes" },
+    "terms": { "th": "จำนวนยูนิตมีจำกัด", "en": "Limited units available." },
+    "image": "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "slug": "pet-friendly-home",
+    "title": { "th": "บ้านที่พร้อมสำหรับสัตว์เลี้ยง", "en": "Pet-friendly homes" },
+    "type": "single-house",
+    "badge": "PET",
+    "summary": { "th": "บ้านเดี่ยวพร้อมพื้นที่สวนและที่จอดรถ", "en": "Single houses with gardens and parking" },
+    "terms": { "th": "กรุณาตรวจสอบกฎโครงการก่อนจอง", "en": "Please check project rules before booking." },
+    "image": "https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "slug": "early-bird",
+    "title": { "th": "Early Bird จองก่อน ได้ก่อน", "en": "Early bird booking deal" },
+    "type": "condo",
+    "badge": "SAVE",
+    "summary": { "th": "รับสิทธิพิเศษสำหรับยูนิตเปิดใหม่", "en": "Special perks on new units" },
+    "terms": { "th": "สิทธิ์มีจำนวนจำกัด", "en": "Limited quota." },
+    "image": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "slug": "work-from-home",
+    "title": { "th": "ห้องพร้อมมุมทำงาน", "en": "Homes with work corners" },
+    "type": "apartment",
+    "badge": "WORK",
+    "summary": { "th": "เลือกยูนิตที่ออกแบบเพื่อทำงานจากบ้าน", "en": "Units designed for working from home" },
+    "terms": { "th": "ขึ้นอยู่กับยูนิตที่ว่าง", "en": "Subject to availability." },
+    "image": "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=80"
+  }
+]

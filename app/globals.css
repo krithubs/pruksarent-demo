@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-body: "IBM Plex Sans Thai", "Noto Sans Thai", "Inter", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: #1f2328;
+  background:
+    linear-gradient(180deg, rgba(245, 248, 242, 0.86), rgba(255, 255, 255, 0) 34rem),
+    #ffffff;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: auto -12rem -18rem auto;
+  width: 34rem;
+  height: 42rem;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 38% 30%, rgba(237, 191, 79, 0.45), transparent 34%),
+    radial-gradient(circle at 42% 48%, rgba(115, 164, 255, 0.38), transparent 38%),
+    radial-gradient(circle at 55% 72%, rgba(241, 90, 41, 0.20), transparent 45%);
+  filter: blur(18px);
+}
+
+.container-page {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.section {
+  @apply py-14 sm:py-20;
+}
+
+.eyebrow {
+  @apply text-sm font-semibold uppercase tracking-wide text-pruksa-green;
+}
+
+.card {
+  @apply rounded-xl border border-black/5 bg-white shadow-soft transition duration-300;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 70px rgba(31, 35, 40, 0.14);
+}
+
+.glass {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.62));
+  box-shadow: 0 24px 80px rgba(31, 35, 40, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.pruksa-aurora {
+  background:
+    radial-gradient(circle at 16% 16%, rgba(91, 167, 48, 0.28), transparent 28%),
+    radial-gradient(circle at 75% 12%, rgba(237, 191, 79, 0.35), transparent 28%),
+    radial-gradient(circle at 78% 58%, rgba(41, 110, 109, 0.20), transparent 32%),
+    radial-gradient(circle at 84% 88%, rgba(241, 90, 41, 0.20), transparent 34%);
+}
+
+.image-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-120%) skewX(-16deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.group:hover .image-sheen::after,
+.image-sheen:hover::after {
+  transform: translateX(120%) skewX(-16deg);
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg bg-pruksa-green px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-pruksa-green/20 transition hover:-translate-y-0.5 hover:bg-[#4c9128] hover:shadow-xl hover:shadow-pruksa-green/30;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-black/10 bg-white px-5 py-3 text-sm font-semibold text-pruksa-ink transition hover:-translate-y-0.5 hover:border-pruksa-green hover:text-pruksa-green;
+}
+
+.input {
+  @apply w-full rounded-lg border border-black/10 bg-white px-3 py-3 text-sm outline-none transition focus:border-pruksa-green focus:ring-2 focus:ring-pruksa-green/20;
+}
+
+.badge {
+  @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-mask {
+  mask-image: linear-gradient(90deg, transparent, black 4%, black 92%, transparent);
+}
+
+.premium-grid {
+  background-image:
+    linear-gradient(rgba(91, 167, 48, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91, 167, 48, 0.08) 1px, transparent 1px);
+  background-size: 38px 38px;
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -14px, 0); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.55; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.float-soft {
+  animation: float-soft 5.8s ease-in-out infinite;
+}
+
+.pulse-ring::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 999px;
+  border: 1px solid rgba(91, 167, 48, 0.45);
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+
+.marquee-track {
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
