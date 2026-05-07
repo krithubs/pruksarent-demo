@@ -85,20 +85,6 @@ body::before {
   overflow: hidden;
 }
 
-.image-sheen::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  transform: translateX(-120%) skewX(-16deg);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
-  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.group:hover .image-sheen::after,
-.image-sheen:hover::after {
-  transform: translateX(120%) skewX(-16deg);
-}
-
 .btn-primary {
   @apply inline-flex items-center justify-center gap-2 rounded-lg bg-pruksa-green px-5 py-3 text-sm font-medium tracking-tight text-white shadow-lg shadow-pruksa-green/20 transition hover:-translate-y-0.5 hover:bg-[#4c9128] hover:shadow-xl hover:shadow-pruksa-green/30;
 }
