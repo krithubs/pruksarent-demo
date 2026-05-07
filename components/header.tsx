@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Heart, Menu, Sparkles, X } from "lucide-react";
+import { Heart, Menu, Sparkles, UserRound, X } from "lucide-react";
 import { useApp } from "./app-providers";
 import { copy } from "@/lib/i18n";
 import { SmartSearch } from "./smart-search";
@@ -81,6 +81,10 @@ export function Header() {
           <button className="btn-primary hidden px-4 py-2 sm:inline-flex">
             <Sparkles size={16} />
             {locale === "th" ? "สนใจจอง" : "Interested"}
+          </button>
+          <button className="btn-secondary hidden px-3 py-2 xl:inline-flex">
+            <UserRound size={16} />
+            {t.signIn}
           </button>
 
           {/* Hamburger */}
