@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
-import { Search, X, MapPin, Navigation, ChevronRight, TrainFront } from "lucide-react";
+import { Search, X, MapPin, Navigation, ChevronRight, TrainFront, Landmark, GraduationCap, ShoppingBag, Hospital, Building2 } from "lucide-react";
 import Link from "next/link";
 import type { Project } from "@/lib/types";
 import { baht, livingTypeLabels } from "@/lib/i18n";
@@ -212,8 +212,82 @@ const TRANSIT_LINES: TransitLine[] = [
   },
 ];
 
-// Radius (km) to consider a project "near" a transit line
+// Radius (km) to consider a project "near" a transit line or POI
 const TRANSIT_NEARBY_RADIUS = 1.5;
+const POI_NEARBY_RADIUS = 3;
+
+// ----- Places of Interest (POI) -----
+type POICategory = "school" | "mall" | "hospital" | "office";
+type POI = {
+  id: string;
+  name: { th: string; en: string };
+  category: POICategory;
+  lat: number;
+  lng: number;
+};
+
+const POI_CATEGORIES: { id: POICategory; name: { th: string; en: string }; color: string }[] = [
+  { id: "school", name: { th: "สถานศึกษา", en: "Schools" }, color: "#2563EB" },
+  { id: "mall", name: { th: "ศูนย์การค้า", en: "Shopping Malls" }, color: "#D946EF" },
+  { id: "hospital", name: { th: "โรงพยาบาล", en: "Hospitals" }, color: "#DC2626" },
+  { id: "office", name: { th: "อาคารสำนักงาน", en: "Office Buildings" }, color: "#6366F1" },
+];
+
+const POIS: POI[] = [
+  // Schools / Universities
+  { id: "cu", name: { th: "จุฬาลงกรณ์มหาวิทยาลัย", en: "Chulalongkorn University" }, category: "school", lat: 13.7383, lng: 100.5322 },
+  { id: "tu-rangsit", name: { th: "ม.ธรรมศาสตร์ รังสิต", en: "Thammasat University Rangsit" }, category: "school", lat: 14.0725, lng: 100.6085 },
+  { id: "mu", name: { th: "ม.มหิดล ศาลายา", en: "Mahidol University" }, category: "school", lat: 13.7949, lng: 100.3225 },
+  { id: "ku", name: { th: "ม.เกษตรศาสตร์ บางเขน", en: "Kasetsart University" }, category: "school", lat: 13.8476, lng: 100.5696 },
+  { id: "abac", name: { th: "ม.อัสสัมชัญ", en: "Assumption University" }, category: "school", lat: 13.6120, lng: 100.8372 },
+  { id: "bu", name: { th: "ม.กรุงเทพ", en: "Bangkok University" }, category: "school", lat: 13.6523, lng: 100.6167 },
+  { id: "swu", name: { th: "ม.ศรีนครินทรวิโรฒ ประสานมิตร", en: "Srinakharinwirot University" }, category: "school", lat: 13.7449, lng: 100.5629 },
+  { id: "kmutt", name: { th: "ม.เทคโนโลยีพระจอมเกล้าธนบุรี", en: "KMUTT" }, category: "school", lat: 13.6508, lng: 100.4946 },
+  { id: "ise", name: { th: "โรงเรียนนานาชาติ ISB", en: "International School Bangkok" }, category: "school", lat: 13.7396, lng: 100.6096 },
+  { id: "harrow", name: { th: "โรงเรียนนานาชาติ Harrow", en: "Harrow International School" }, category: "school", lat: 13.6949, lng: 100.6367 },
+  // Shopping Malls
+  { id: "siam-paragon", name: { th: "สยามพารากอน", en: "Siam Paragon" }, category: "mall", lat: 13.7463, lng: 100.5347 },
+  { id: "central-world", name: { th: "เซ็นทรัลเวิลด์", en: "CentralWorld" }, category: "mall", lat: 13.7466, lng: 100.5392 },
+  { id: "emquartier", name: { th: "ดิ เอ็มควอเทียร์", en: "EmQuartier" }, category: "mall", lat: 13.7310, lng: 100.5693 },
+  { id: "terminal21", name: { th: "เทอร์มินอล 21", en: "Terminal 21" }, category: "mall", lat: 13.7375, lng: 100.5605 },
+  { id: "iconsiam", name: { th: "ไอคอนสยาม", en: "ICONSIAM" }, category: "mall", lat: 13.7267, lng: 100.5101 },
+  { id: "mega-bangna", name: { th: "เมกาบางนา", en: "Mega Bangna" }, category: "mall", lat: 13.6512, lng: 100.6837 },
+  { id: "central-ladprao", name: { th: "เซ็นทรัล ลาดพร้าว", en: "Central Ladprao" }, category: "mall", lat: 13.8162, lng: 100.5618 },
+  { id: "fashion-island", name: { th: "แฟชั่นไอส์แลนด์", en: "Fashion Island" }, category: "mall", lat: 13.8294, lng: 100.6627 },
+  { id: "central-rama9", name: { th: "เซ็นทรัล พระราม 9", en: "Central Rama 9" }, category: "mall", lat: 13.7599, lng: 100.5685 },
+  { id: "the-mall-bangkapi", name: { th: "เดอะมอลล์ บางกะปิ", en: "The Mall Bangkapi" }, category: "mall", lat: 13.7651, lng: 100.6437 },
+  { id: "central-rama2", name: { th: "เซ็นทรัล พระราม 2", en: "Central Rama 2" }, category: "mall", lat: 13.6576, lng: 100.4480 },
+  // Hospitals
+  { id: "bumrungrad", name: { th: "โรงพยาบาลบำรุงราษฎร์", en: "Bumrungrad Hospital" }, category: "hospital", lat: 13.7434, lng: 100.5559 },
+  { id: "bnh", name: { th: "โรงพยาบาล BNH", en: "BNH Hospital" }, category: "hospital", lat: 13.7276, lng: 100.5366 },
+  { id: "samitivej-sukhumvit", name: { th: "โรงพยาบาลสมิติเวช สุขุมวิท", en: "Samitivej Sukhumvit Hospital" }, category: "hospital", lat: 13.7198, lng: 100.5908 },
+  { id: "ramathibodi", name: { th: "โรงพยาบาลรามาธิบดี", en: "Ramathibodi Hospital" }, category: "hospital", lat: 13.7652, lng: 100.5334 },
+  { id: "siriraj", name: { th: "โรงพยาบาลศิริราช", en: "Siriraj Hospital" }, category: "hospital", lat: 13.7591, lng: 100.4866 },
+  { id: "praram9", name: { th: "โรงพยาบาลพระราม 9", en: "Praram 9 Hospital" }, category: "hospital", lat: 13.7572, lng: 100.5655 },
+  { id: "medpark", name: { th: "โรงพยาบาลเมดพาร์ค", en: "MedPark Hospital" }, category: "hospital", lat: 13.7225, lng: 100.5606 },
+  { id: "bangpakok9", name: { th: "โรงพยาบาลบางปะกอก 9", en: "Bangpakok 9 Hospital" }, category: "hospital", lat: 13.6858, lng: 100.4879 },
+  { id: "kasemrad-ratburana", name: { th: "โรงพยาบาลเกษมราษฎร์ ราษฎร์บูรณะ", en: "Kasemrad Ratburana Hospital" }, category: "hospital", lat: 13.6743, lng: 100.5042 },
+  // Office / Business Districts
+  { id: "asoke-towers", name: { th: "อาคารอโศก ทาวเวอร์ส", en: "Asoke Towers" }, category: "office", lat: 13.7384, lng: 100.5610 },
+  { id: "sathorn-sq", name: { th: "สาทร สแควร์", en: "Sathorn Square" }, category: "office", lat: 13.7219, lng: 100.5291 },
+  { id: "fyi-center", name: { th: "FYI Center พระราม 4", en: "FYI Center Rama 4" }, category: "office", lat: 13.7216, lng: 100.5614 },
+  { id: "sj-infinite", name: { th: "SJ Infinite One", en: "SJ Infinite One" }, category: "office", lat: 13.7574, lng: 100.5670 },
+  { id: "muang-thai-phatra", name: { th: "อาคารเมืองไทย-ภัทร", en: "Muang Thai-Phatra Complex" }, category: "office", lat: 13.7581, lng: 100.5646 },
+  { id: "true-digital-park", name: { th: "True Digital Park", en: "True Digital Park" }, category: "office", lat: 13.6870, lng: 100.6104 },
+];
+
+function getCategoryIcon(category: POICategory) {
+  switch (category) {
+    case "school": return GraduationCap;
+    case "mall": return ShoppingBag;
+    case "hospital": return Hospital;
+    case "office": return Building2;
+  }
+}
+
+function getCategoryColor(category: POICategory) {
+  return POI_CATEGORIES.find((c) => c.id === category)?.color || "#6366F1";
+}
 
 // Known locations for search suggestions
 const LOCATIONS: { name: { th: string; en: string }; lat: number; lng: number }[] = [
@@ -258,6 +332,10 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
   const [searchCenter, setSearchCenter] = useState<{ lat: number; lng: number; label: string } | null>(null);
   const [activeLine, setActiveLine] = useState<TransitLine | null>(null);
   const [showLinePanel, setShowLinePanel] = useState(false);
+  const [activePOI, setActivePOI] = useState<POI | null>(null);
+  const [activePOICategory, setActivePOICategory] = useState<POICategory | null>(null);
+  const [showPOIPanel, setShowPOIPanel] = useState(false);
+  const poiLayerRef = useRef<L.LayerGroup | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
   // Projects near active transit line
@@ -268,8 +346,17 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
     );
   }, [activeLine, projects]);
 
+  // Projects near active POI
+  const nearbyPOIProjects = useMemo(() => {
+    if (!activePOI) return null;
+    return [...projects]
+      .map((p) => ({ ...p, distance: getDistance(activePOI.lat, activePOI.lng, p.lat, p.lng) }))
+      .filter((p) => p.distance <= POI_NEARBY_RADIUS)
+      .sort((a, b) => a.distance - b.distance);
+  }, [activePOI, projects]);
+
   type Suggestion = {
-    type: "location" | "project" | "transit-line" | "transit-station";
+    type: "location" | "project" | "transit-line" | "transit-station" | "poi";
     label: string;
     sublabel: string;
     lat: number;
@@ -277,6 +364,8 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
     slug?: string;
     lineId?: string;
     lineColor?: string;
+    poiId?: string;
+    poiCategory?: POICategory;
   };
 
   const suggestions = useMemo<Suggestion[]>(() => {
@@ -319,6 +408,36 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
       if (stationMatches.length >= 5) break;
     }
 
+    // POI matches
+    const poiMatches: Suggestion[] = POIS
+      .filter((poi) => poi.name.th.includes(q) || poi.name.en.toLowerCase().includes(q))
+      .slice(0, 5)
+      .map((poi) => ({
+        type: "poi" as const,
+        label: poi.name[locale],
+        sublabel: POI_CATEGORIES.find((c) => c.id === poi.category)!.name[locale],
+        lat: poi.lat,
+        lng: poi.lng,
+        poiId: poi.id,
+        poiCategory: poi.category,
+      }));
+
+    // Also match by category name (e.g. "โรงพยาบาล", "mall", "สถานศึกษา")
+    const categoryMatch = POI_CATEGORIES.find(
+      (c) => c.name.th.includes(q) || c.name.en.toLowerCase().includes(q)
+    );
+    const categoryPOIs: Suggestion[] = categoryMatch && poiMatches.length === 0
+      ? POIS.filter((poi) => poi.category === categoryMatch.id).slice(0, 6).map((poi) => ({
+          type: "poi" as const,
+          label: poi.name[locale],
+          sublabel: categoryMatch.name[locale],
+          lat: poi.lat,
+          lng: poi.lng,
+          poiId: poi.id,
+          poiCategory: poi.category,
+        }))
+      : [];
+
     const locationMatches = LOCATIONS.filter(
       (loc) => loc.name.th.includes(q) || loc.name.en.toLowerCase().includes(q)
     ).slice(0, 3);
@@ -337,6 +456,8 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
     return [
       ...lineMatches,
       ...stationMatches.slice(0, 5),
+      ...poiMatches,
+      ...categoryPOIs,
       ...locationMatches.map((loc) => ({
         type: "location" as const,
         label: loc.name[locale],
@@ -481,6 +602,89 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
     drawTransitLine(activeLine);
   }, [activeLine, drawTransitLine]);
 
+  // Draw POI markers on map
+  const drawPOIMarkers = useCallback(async (poi: POI | null, category: POICategory | null) => {
+    if (!leafletMap.current || !ready) return;
+
+    const L = (await import("leaflet")).default;
+    const map = leafletMap.current;
+
+    // Clear previous POI layer
+    if (poiLayerRef.current) {
+      poiLayerRef.current.clearLayers();
+      map.removeLayer(poiLayerRef.current);
+      poiLayerRef.current = null;
+    }
+
+    if (!poi && !category) return;
+
+    const group = L.layerGroup();
+    const poisToShow = poi ? [poi] : POIS.filter((p) => p.category === category);
+
+    poisToShow.forEach((p) => {
+      const color = getCategoryColor(p.category);
+      const isActive = poi?.id === p.id;
+      const size = isActive ? 38 : 28;
+
+      const icon = L.divIcon({
+        className: "poi-marker",
+        html: `<div style="
+          width: ${size}px; height: ${size}px;
+          background: ${color};
+          border: 3px solid white;
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+          cursor: pointer;
+        ">
+          <svg width="${isActive ? 18 : 14}" height="${isActive ? 18 : 14}" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            ${p.category === "school" ? '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>' :
+              p.category === "mall" ? '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>' :
+              p.category === "hospital" ? '<path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>' :
+              '<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="15" y2="14"/>'}
+          </svg>
+        </div>`,
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size],
+      });
+
+      const marker = L.marker([p.lat, p.lng], { icon, zIndexOffset: isActive ? 900 : 400 });
+
+      // Popup with POI details
+      marker.bindPopup(
+        `<div style="min-width:160px;padding:4px 0;">
+          <strong style="font-size:13px;">${p.name[locale]}</strong><br/>
+          <span style="font-size:11px;color:#666;">${POI_CATEGORIES.find((c) => c.id === p.category)!.name[locale]}</span>
+        </div>`,
+        { closeButton: true, offset: [0, -size / 2] }
+      );
+
+      marker.on("click", () => {
+        setActivePOI(p);
+        setSearchQuery(p.name[locale]);
+        setSearchCenter({ lat: p.lat, lng: p.lng, label: p.name[locale] });
+        map.flyTo([p.lat, p.lng], 15, { duration: 0.5 });
+      });
+
+      marker.addTo(group);
+    });
+
+    group.addTo(map);
+    poiLayerRef.current = group;
+
+    if (poi) {
+      map.flyTo([poi.lat, poi.lng], 15, { duration: 0.8 });
+    } else if (poisToShow.length > 1) {
+      const bounds = L.latLngBounds(poisToShow.map((p): [number, number] => [p.lat, p.lng]));
+      map.fitBounds(bounds, { padding: [60, 60], maxZoom: 13 });
+    }
+  }, [ready, locale]);
+
+  // When POI state changes
+  useEffect(() => {
+    drawPOIMarkers(activePOI, activePOICategory);
+  }, [activePOI, activePOICategory, drawPOIMarkers]);
+
   // Update markers when projects or locale changes
   const updateMarkers = useCallback(async () => {
     if (!leafletMap.current || !ready) return;
@@ -562,28 +766,45 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
   function handleSelectSuggestion(suggestion: Suggestion) {
     setSearchQuery(suggestion.label);
     setShowSuggestions(false);
+    setShowPOIPanel(false);
+    setShowLinePanel(false);
 
     if (suggestion.type === "transit-line" && suggestion.lineId) {
       const line = TRANSIT_LINES.find((l) => l.id === suggestion.lineId)!;
       setActiveLine(line);
+      setActivePOI(null);
+      setActivePOICategory(null);
       setSearchCenter(null);
       setSelectedProject(null);
-      return; // drawTransitLine handles the map view
+      return;
     }
 
     if (suggestion.type === "transit-station" && suggestion.lineId) {
       const line = TRANSIT_LINES.find((l) => l.id === suggestion.lineId)!;
       setActiveLine(line);
+      setActivePOI(null);
+      setActivePOICategory(null);
       setSearchCenter({ lat: suggestion.lat, lng: suggestion.lng, label: suggestion.label });
       setSelectedProject(null);
-      // Fly to station after line draws
       setTimeout(() => {
         leafletMap.current?.flyTo([suggestion.lat, suggestion.lng], 15, { duration: 0.8 });
       }, 300);
       return;
     }
 
+    if (suggestion.type === "poi" && suggestion.poiId) {
+      const poi = POIS.find((p) => p.id === suggestion.poiId)!;
+      setActivePOI(poi);
+      setActivePOICategory(poi.category);
+      setActiveLine(null);
+      setSearchCenter({ lat: poi.lat, lng: poi.lng, label: poi.name[locale] });
+      setSelectedProject(null);
+      return;
+    }
+
     setActiveLine(null);
+    setActivePOI(null);
+    setActivePOICategory(null);
     setSearchCenter({ lat: suggestion.lat, lng: suggestion.lng, label: suggestion.label });
 
     if (leafletMap.current) {
@@ -605,11 +826,26 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
     setShowLinePanel(false);
   }
 
+  function handleSelectPOICategory(category: POICategory) {
+    setActivePOICategory(category);
+    setActivePOI(null);
+    setActiveLine(null);
+    setSearchCenter(null);
+    setSelectedProject(null);
+    setShowPOIPanel(false);
+    const cat = POI_CATEGORIES.find((c) => c.id === category)!;
+    setSearchQuery(cat.name[locale]);
+  }
+
   function handleClearSearch() {
     setSearchQuery("");
     setSearchCenter(null);
     setSelectedProject(null);
     setActiveLine(null);
+    setActivePOI(null);
+    setActivePOICategory(null);
+    setShowPOIPanel(false);
+    setShowLinePanel(false);
     if (leafletMap.current) {
       leafletMap.current.flyTo(BANGKOK_CENTER, DEFAULT_ZOOM, { duration: 0.8 });
     }
@@ -659,11 +895,18 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
               </button>
             )}
             <button
-              onClick={() => setShowLinePanel((v) => !v)}
+              onClick={() => { setShowLinePanel((v) => !v); setShowPOIPanel(false); }}
               className={`shrink-0 rounded-lg p-1.5 transition ${showLinePanel || activeLine ? "bg-pruksa-teal text-white" : "bg-pruksa-teal/10 text-pruksa-teal hover:bg-pruksa-teal/20"}`}
               title={locale === "th" ? "เส้นทาง BTS/MRT" : "BTS/MRT Lines"}
             >
               <TrainFront size={16} />
+            </button>
+            <button
+              onClick={() => { setShowPOIPanel((v) => !v); setShowLinePanel(false); }}
+              className={`shrink-0 rounded-lg p-1.5 transition ${showPOIPanel || activePOI || activePOICategory ? "bg-blue-600 text-white" : "bg-blue-600/10 text-blue-600 hover:bg-blue-600/20"}`}
+              title={locale === "th" ? "สถานที่สำคัญ" : "Places of Interest"}
+            >
+              <Landmark size={16} />
             </button>
             <button
               onClick={handleNearMe}
@@ -685,7 +928,7 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
                 >
                   <span
                     className={`grid h-8 w-8 shrink-0 place-items-center rounded-full ${
-                      s.type === "transit-line" || s.type === "transit-station"
+                      s.type === "transit-line" || s.type === "transit-station" || s.type === "poi"
                         ? ""
                         : s.type === "location"
                           ? "bg-pruksa-teal/10 text-pruksa-teal"
@@ -694,11 +937,15 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
                     style={
                       s.type === "transit-line" || s.type === "transit-station"
                         ? { background: (s.lineColor || "#296E6D") + "18", color: s.lineColor || "#296E6D" }
-                        : undefined
+                        : s.type === "poi" && s.poiCategory
+                          ? { background: getCategoryColor(s.poiCategory) + "18", color: getCategoryColor(s.poiCategory) }
+                          : undefined
                     }
                   >
                     {s.type === "transit-line" || s.type === "transit-station" ? (
                       <TrainFront size={14} />
+                    ) : s.type === "poi" && s.poiCategory ? (
+                      (() => { const Icon = getCategoryIcon(s.poiCategory); return <Icon size={14} />; })()
                     ) : (
                       <MapPin size={14} />
                     )}
@@ -715,6 +962,74 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
                   {s.type !== "transit-line" && <ChevronRight size={14} className="shrink-0 text-black/30" />}
                 </button>
               ))}
+            </div>
+          )}
+
+          {/* POI category picker panel */}
+          {showPOIPanel && !showSuggestions && !showLinePanel && (
+            <div className="mt-1.5 overflow-hidden rounded-xl bg-white/95 shadow-lg backdrop-blur">
+              <div className="border-b px-4 py-2.5">
+                <p className="text-xs font-semibold text-black/60">
+                  {locale === "th" ? "ค้นหาใกล้สถานที่สำคัญ" : "Search near Places of Interest"}
+                </p>
+              </div>
+              {/* Category buttons */}
+              <div className="grid grid-cols-2 gap-2 p-3">
+                {POI_CATEGORIES.map((cat) => {
+                  const Icon = getCategoryIcon(cat.id);
+                  const isActive = activePOICategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      className={`flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-left transition ${isActive ? "ring-2 ring-offset-1" : "hover:bg-black/5"}`}
+                      style={isActive ? { background: cat.color + "12", "--tw-ring-color": cat.color } as React.CSSProperties : undefined}
+                      onClick={() => handleSelectPOICategory(cat.id)}
+                    >
+                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-white" style={{ background: cat.color }}>
+                        <Icon size={15} />
+                      </span>
+                      <div>
+                        <p className="text-xs font-semibold">{cat.name[locale]}</p>
+                        <p className="text-[10px] text-black/45">
+                          {POIS.filter((p) => p.category === cat.id).length} {locale === "th" ? "แห่ง" : "places"}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+              {/* POI list for active category */}
+              {activePOICategory && (
+                <div className="max-h-48 overflow-y-auto border-t">
+                  {POIS.filter((p) => p.category === activePOICategory).map((poi) => {
+                    const Icon = getCategoryIcon(poi.category);
+                    const color = getCategoryColor(poi.category);
+                    return (
+                      <button
+                        key={poi.id}
+                        className={`flex w-full items-center gap-2.5 px-4 py-2.5 text-left hover:bg-black/5 ${activePOI?.id === poi.id ? "bg-black/5" : ""}`}
+                        onClick={() => {
+                          setActivePOI(poi);
+                          setSearchQuery(poi.name[locale]);
+                          setSearchCenter({ lat: poi.lat, lng: poi.lng, label: poi.name[locale] });
+                          setSelectedProject(null);
+                          setShowPOIPanel(false);
+                        }}
+                      >
+                        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full" style={{ background: color + "18", color }}>
+                          <Icon size={13} />
+                        </span>
+                        <p className="min-w-0 flex-1 truncate text-xs font-medium">{poi.name[locale]}</p>
+                        {activePOI?.id === poi.id && (
+                          <span className="shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold text-white" style={{ background: color }}>
+                            {locale === "th" ? "เลือก" : "Active"}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
@@ -765,23 +1080,36 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
               {activeLine.name[locale]}
               {nearbyLineProjects && " · " + nearbyLineProjects.length + (locale === "th" ? " โครงการใกล้เคียง" : " nearby projects")}
             </span>
-            <button
-              onClick={handleClearSearch}
-              className="rounded-full bg-white/90 p-1 shadow-sm backdrop-blur hover:bg-white"
-            >
-              <X size={12} />
-            </button>
+            <button onClick={handleClearSearch} className="rounded-full bg-white/90 p-1 shadow-sm backdrop-blur hover:bg-white"><X size={12} /></button>
           </div>
         )}
-        {/* Search center indicator */}
+        {/* Active POI category indicator (no specific POI selected) */}
+        {!activeLine && activePOICategory && !activePOI && !searchCenter && (
+          <div className="mx-auto mt-2 flex max-w-lg items-center justify-center gap-2">
+            <span className="flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-medium shadow-sm backdrop-blur">
+              {(() => { const Icon = getCategoryIcon(activePOICategory); return <Icon size={12} style={{ color: getCategoryColor(activePOICategory) }} />; })()}
+              {POI_CATEGORIES.find((c) => c.id === activePOICategory)!.name[locale]}
+              {" · "}{POIS.filter((p) => p.category === activePOICategory).length}{locale === "th" ? " แห่ง" : " places"}
+            </span>
+            <button onClick={handleClearSearch} className="rounded-full bg-white/90 p-1 shadow-sm backdrop-blur hover:bg-white"><X size={12} /></button>
+          </div>
+        )}
+        {/* Search center indicator (POI or location) */}
         {searchCenter && (
           <div className="mx-auto mt-2 flex max-w-lg items-center justify-center gap-2">
             <span className="flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-medium shadow-sm backdrop-blur">
-              {activeLine && <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: activeLine.color }} />}
-              {!activeLine && <MapPin size={12} className="text-pruksa-orange" />}
+              {activePOI ? (
+                (() => { const Icon = getCategoryIcon(activePOI.category); return <Icon size={12} style={{ color: getCategoryColor(activePOI.category) }} />; })()
+              ) : activeLine ? (
+                <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: activeLine.color }} />
+              ) : (
+                <MapPin size={12} className="text-pruksa-orange" />
+              )}
               {searchCenter.label}
-              {!activeLine && sortedProjects.length > 0 && " · " + sortedProjects.length + (locale === "th" ? " โครงการ" : " projects")}
+              {activePOI && nearbyPOIProjects && " · " + nearbyPOIProjects.length + (locale === "th" ? " โครงการใกล้เคียง" : " nearby")}
+              {!activePOI && !activeLine && sortedProjects.length > 0 && " · " + sortedProjects.length + (locale === "th" ? " โครงการ" : " projects")}
             </span>
+            <button onClick={handleClearSearch} className="rounded-full bg-white/90 p-1 shadow-sm backdrop-blur hover:bg-white"><X size={12} /></button>
           </div>
         )}
       </div>
@@ -843,38 +1171,44 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
         </div>
       )}
 
-      {/* Nearby projects list — for transit line OR location search */}
-      {!selectedProject && (activeLine || searchCenter) && (
+      {/* Nearby projects list — for transit line, POI, or location search */}
+      {!selectedProject && (activeLine || activePOI || searchCenter) && (
         <div className="absolute bottom-4 left-4 z-[1000] max-h-52 w-72 overflow-y-auto rounded-xl bg-white/95 shadow-lg backdrop-blur">
           <div className="sticky top-0 border-b bg-white/95 px-3 py-2 backdrop-blur">
             <p className="flex items-center gap-1.5 text-xs font-semibold text-black/60">
-              {activeLine && <span className="inline-block h-2 w-2 rounded-full" style={{ background: activeLine.color }} />}
-              {activeLine && !searchCenter
-                ? (locale === "th" ? "โครงการแนว " : "Projects along ") + activeLine.name[locale]
-                : locale === "th" ? "โครงการใกล้เคียง" : "Nearby projects"}
+              {activePOI ? (
+                (() => { const Icon = getCategoryIcon(activePOI.category); return <Icon size={10} style={{ color: getCategoryColor(activePOI.category) }} />; })()
+              ) : activeLine ? (
+                <span className="inline-block h-2 w-2 rounded-full" style={{ background: activeLine.color }} />
+              ) : null}
+              {activePOI
+                ? (locale === "th" ? "โครงการใกล้ " : "Projects near ") + activePOI.name[locale]
+                : activeLine && !searchCenter
+                  ? (locale === "th" ? "โครงการแนว " : "Projects along ") + activeLine.name[locale]
+                  : locale === "th" ? "โครงการใกล้เคียง" : "Nearby projects"}
             </p>
           </div>
           {(() => {
-            const listProjects = activeLine && !searchCenter ? nearbyLineProjects ?? [] : sortedProjects;
+            const listProjects = activePOI
+              ? nearbyPOIProjects ?? []
+              : activeLine && !searchCenter
+                ? nearbyLineProjects ?? []
+                : sortedProjects;
             const maxItems = compact ? 3 : 6;
             if (listProjects.length === 0) {
               return (
                 <div className="px-3 py-4 text-center text-xs text-black/40">
-                  {locale === "th" ? "ไม่พบโครงการในแนวนี้" : "No projects found along this line"}
+                  {locale === "th" ? "ไม่พบโครงการใกล้เคียง" : "No nearby projects found"}
                 </div>
               );
             }
             return listProjects.slice(0, maxItems).map((project) => {
-              // Find nearest station for transit line display
-              let nearestStation = "";
+              let detail = "";
               if (activeLine) {
                 let minDist = Infinity;
                 for (const s of activeLine.stations) {
                   const d = getDistance(project.lat, project.lng, s.lat, s.lng);
-                  if (d < minDist) {
-                    minDist = d;
-                    nearestStation = s.name[locale] + " (" + minDist.toFixed(1) + " km)";
-                  }
+                  if (d < minDist) { minDist = d; detail = s.name[locale] + " (" + minDist.toFixed(1) + " km)"; }
                 }
               }
               const distStr = "distance" in project ? ((project as Project & { distance: number }).distance).toFixed(1) + " km" : "";
@@ -892,8 +1226,8 @@ export default function InteractiveMap({ projects, compact = false, onProjectsIn
                     <p className="truncate text-xs font-semibold">{project.name[locale]}</p>
                     <p className="truncate text-[10px] text-black/50">
                       {baht(project.priceMin)}/mo
-                      {nearestStation && <> · <TrainFront size={9} className="inline" /> {nearestStation}</>}
-                      {!nearestStation && distStr && " · " + distStr}
+                      {detail && <> · <TrainFront size={9} className="inline" /> {detail}</>}
+                      {!detail && distStr && " · " + distStr}
                     </p>
                   </div>
                 </button>
