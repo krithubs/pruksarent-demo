@@ -14,8 +14,8 @@ export function Footer() {
       <div className="container-page grid gap-10 py-14 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/10">
-              <img src="https://static.pruksa.com/static/favicons/apple-touch-icon.png" alt="Pruksa" className="h-7 w-7 object-contain" />
+            <span className="grid h-10 w-10 place-items-center rounded-xl ">
+              <img src="/Logo_pruksa-thai_cs2.png" alt="Pruksa" className="h-7 w-7 object-contain" />
             </span>
             <span className="leading-tight">
               <span className="block text-lg font-semibold">PRUKSA</span>

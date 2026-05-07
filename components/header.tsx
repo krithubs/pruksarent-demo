@@ -22,8 +22,8 @@ export function Header() {
     <header className="sticky top-0 z-40 bg-transparent px-3 py-3">
       <div className="container-page glass flex h-16 items-center justify-between gap-4 rounded-2xl px-4">
         <Link href="/" className="flex shrink-0 items-center gap-2 font-semibold text-pruksa-ink">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-white shadow-sm ring-1 ring-black/5">
-            <img src="https://static.pruksa.com/static/favicons/apple-touch-icon.png" alt="Pruksa" className="h-7 w-7 object-contain" />
+          <span className="grid h-10 w-10 place-items-center ">
+            <img src="/Logo_pruksa-thai_cs2.png" alt="Pruksa" className="h-10 w-10 object-contain" />
           </span>
           <span className="hidden leading-tight sm:block">
             <span className="block">PRUKSA</span>
