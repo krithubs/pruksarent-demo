@@ -10,6 +10,7 @@ import { useApp } from "@/components/app-providers";
 import { MapPreview } from "@/components/map-preview";
 import { ProjectCard } from "@/components/project-card";
 import { Reveal } from "@/components/reveal";
+import { SmartSearch } from "@/components/smart-search";
 
 const typeIcons: Record<LivingType, LucideIcon> = {
   apartment: Building2,
@@ -64,22 +65,16 @@ export default function HomePage() {
       </section>
 
       <section className="container-page -mt-20 relative z-10">
-        <div className="glass rounded-2xl p-4">
-          <div className="mb-4 flex flex-wrap gap-2">
-            {[t.btsMrt, t.location, t.nearMe, t.mapView].map((label, index) => (
-              <button key={label} className={`rounded-lg px-4 py-2 text-sm font-semibold ${index === 0 ? "bg-pruksa-green text-white" : "bg-black/5"}`}>{label}</button>
-            ))}
+        <div className="glass rounded-2xl p-5">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap gap-2">
+              {[t.btsMrt, t.location, t.nearMe, t.mapView].map((label, index) => (
+                <button key={label} className={`rounded-lg px-4 py-2 text-sm font-semibold ${index === 0 ? "bg-pruksa-green text-white" : "bg-black/5"}`}>{label}</button>
+              ))}
+            </div>
+            <p className="hidden text-xs text-black/40 sm:block">{locale === "th" ? "ค้นหาได้ทุกอย่างในช่องเดียว" : "Search everything in one place"}</p>
           </div>
-          <div className="grid gap-3 lg:grid-cols-[1.4fr_1fr_1fr_1fr_auto]">
-            <label className="relative">
-              <Search className="absolute left-3 top-3.5 text-black/40" size={18} />
-              <input className="input pl-10" placeholder={locale === "th" ? "ค้นหาทำเล โครงการ รถไฟฟ้า หรือสถานศึกษา" : "Search location, project, transit or school"} />
-            </label>
-            <select className="input"><option>{t.allTypes}</option>{Object.entries(livingTypeLabels).map(([key, value]) => <option key={key}>{value[locale]}</option>)}</select>
-            <select className="input"><option>{t.budget}: ฿5k-฿100k+</option><option>{baht(15000)} - {baht(30000)}</option><option>{baht(30000)}+</option></select>
-            <input className="input" type="date" aria-label={t.moveIn} />
-            <Link href="/rent" className="btn-primary"><Search size={18} />{t.findHome}</Link>
-          </div>
+          <SmartSearch variant="hero" />
         </div>
       </section>
 

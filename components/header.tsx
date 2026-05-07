@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Heart, Languages, Menu, Sparkles, UserRound } from "lucide-react";
 import { useApp } from "./app-providers";
 import { copy } from "@/lib/i18n";
+import { SmartSearch } from "./smart-search";
 
 const nav = [
   { href: "/rent", key: "rent" },
@@ -20,11 +21,11 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 bg-transparent px-3 py-3">
       <div className="container-page glass flex h-16 items-center justify-between gap-4 rounded-2xl px-4">
-        <Link href="/" className="flex items-center gap-2 font-semibold text-pruksa-ink">
+        <Link href="/" className="flex shrink-0 items-center gap-2 font-semibold text-pruksa-ink">
           <span className="grid h-10 w-10 place-items-center rounded-xl bg-white shadow-sm ring-1 ring-black/5">
             <img src="https://static.pruksa.com/static/favicons/apple-touch-icon.png" alt="Pruksa" className="h-7 w-7 object-contain" />
           </span>
-          <span className="leading-tight">
+          <span className="hidden leading-tight sm:block">
             <span className="block">PRUKSA</span>
             <span className="block text-xs font-medium text-pruksa-green">Rental Experience</span>
           </span>
@@ -36,6 +37,11 @@ export function Header() {
             </Link>
           ))}
         </nav>
+        <div className="hidden flex-1 justify-end lg:flex lg:max-w-xs xl:max-w-sm">
+          <div className="w-full">
+            <SmartSearch variant="header" />
+          </div>
+        </div>
         <div className="flex items-center gap-2">
           <button
             className="btn-secondary hidden px-3 py-2 sm:inline-flex"
