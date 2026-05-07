@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Heart, Languages, Menu, Sparkles, X } from "lucide-react";
+import { Heart, Menu, Sparkles, X } from "lucide-react";
 import { useApp } from "./app-providers";
 import { copy } from "@/lib/i18n";
 import { SmartSearch } from "./smart-search";
@@ -71,7 +71,7 @@ export function Header() {
             onClick={() => setLocale(locale === "th" ? "en" : "th")}
             aria-label="Toggle language"
           >
-            <Languages size={16} />
+            <span className="text-base leading-none">{locale === "th" ? "🇬🇧" : "🇹🇭"}</span>
             {locale === "th" ? "EN" : "TH"}
           </button>
           <Link href="/rent" className="btn-secondary px-3 py-2" aria-label="Favorites">
@@ -126,7 +126,7 @@ export function Header() {
                       onClick={() => { setLocale(locale === "th" ? "en" : "th"); setOpen(false); }}
                       className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-black/60 transition hover:bg-black/[0.03] hover:text-black sm:hidden"
                     >
-                      <Languages size={15} />
+                      <span className="text-base leading-none">{locale === "th" ? "🇬🇧" : "🇹🇭"}</span>
                       {locale === "th" ? "English" : "ภาษาไทย"}
                     </button>
                     <Link
