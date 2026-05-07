@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Building2, Home, Search, TrainFront, Trees, type LucideIcon } from "lucide-react";
-import { blogs, projects, promotions } from "@/lib/data";
+import { ArrowRight, Building2, Home, Search, TrainFront, Trees, type LucideIcon } from "lucide-react";
+import { blogs, projects, promotions, PROJECT_IMAGES } from "@/lib/data";
 import { baht, copy, livingTypeLabels } from "@/lib/i18n";
 import type { LivingType } from "@/lib/types";
 import { useApp } from "@/components/app-providers";
@@ -16,7 +16,22 @@ const typeIcons: Record<LivingType, LucideIcon> = {
   apartment: Building2,
   "single-house": Home,
   townhome: Trees,
-  condo: Building2
+  condo: Building2,
+};
+
+const typeDescriptions: Record<LivingType, { th: string; en: string }> = {
+  condo: { th: "ห้องชุดพร้อมอยู่ ใจกลางเมือง ใกล้รถไฟฟ้า", en: "Ready-to-live units in the city center, near BTS/MRT" },
+  apartment: { th: "ห้องพักตกแต่งครบ เข้าอยู่ได้ทันที", en: "Fully furnished rooms, move in right away" },
+  "single-house": { th: "บ้านเดี่ยวพร้อมสนามหญ้า พื้นที่ส่วนตัวเต็มที่", en: "Detached homes with gardens and full privacy" },
+  townhome: { th: "ทาวน์โฮมหน้ากว้าง จอดรถสะดวก ใกล้ชุมชน", en: "Wide-frontage townhomes with easy parking" },
+};
+
+// Pick a dedicated hero image per type (not from round-robin)
+const typeHeroImages: Record<LivingType, string> = {
+  condo: PROJECT_IMAGES.condo[1],
+  apartment: PROJECT_IMAGES.apartment[0],
+  "single-house": PROJECT_IMAGES["single-house"][1],
+  townhome: PROJECT_IMAGES.townhome[0],
 };
 
 export default function HomePage() {
@@ -48,24 +63,42 @@ export default function HomePage() {
       </section>
 
       <Reveal className="section container-page">
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Living Type</p>
-            <h2 className="mt-2 text-3xl font-semibold">{locale === "th" ? "เลือกที่อยู่ตามไลฟ์สไตล์" : "Choose by living type"}</h2>
-          </div>
-          <TrainFront className="text-pruksa-green" />
+        <div className="mb-10 text-center">
+          <p className="eyebrow">Living Type</p>
+          <h2 className="mt-2 text-3xl font-semibold">{locale === "th" ? "เลือกที่อยู่ตามไลฟ์สไตล์" : "Choose by living type"}</h2>
+          <p className="mx-auto mt-3 max-w-lg text-sm text-black/50">{locale === "th" ? "เลือกประเภทที่อยู่อาศัยที่เหมาะกับรูปแบบชีวิตของคุณ" : "Select the property type that matches your lifestyle"}</p>
         </div>
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {(Object.keys(livingTypeLabels) as LivingType[]).map((type) => {
             const Icon = typeIcons[type];
-            const project = projects.find((item) => item.type === type)!;
+            const count = counts[type] ?? 0;
             return (
-              <Link href={`/rent?type=${type}`} key={type} className="card group overflow-hidden">
-                <img src={project.image} alt="" className="h-36 w-full object-cover transition group-hover:scale-105" />
-                <div className="p-5">
-                  <Icon className="text-pruksa-green" />
-                  <h3 className="mt-3 text-lg font-semibold">{livingTypeLabels[type][locale]}</h3>
-                  <p className="text-sm text-black/60">{counts[type] ?? 0} projects</p>
+              <Link href={`/rent?type=${type}`} key={type} className="group relative overflow-hidden rounded-2xl">
+                {/* Image */}
+                <div className="aspect-[4/5] overflow-hidden">
+                  <img
+                    src={typeHeroImages[type]}
+                    alt={livingTypeLabels[type][locale]}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+                </div>
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                {/* Content */}
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <span className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-white backdrop-blur-sm">
+                    <Icon size={20} />
+                  </span>
+                  <h3 className="text-lg font-semibold text-white">{livingTypeLabels[type][locale]}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-white/70">{typeDescriptions[type][locale]}</p>
+                  <div className="mt-3 flex items-center justify-between">
+                    <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                      {count} {locale === "th" ? "โครงการ" : "projects"}
+                    </span>
+                    <span className="grid h-8 w-8 place-items-center rounded-full bg-white/15 text-white backdrop-blur-sm transition group-hover:bg-white/25">
+                      <ArrowRight size={14} />
+                    </span>
+                  </div>
                 </div>
               </Link>
             );
