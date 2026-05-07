@@ -2,19 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-body: "IBM Plex Sans Thai", "Noto Sans Thai", "Inter", sans-serif;
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
 
-html {
-  scroll-behavior: smooth;
-}
+  body {
+    @apply text-base font-normal text-pruksa-ink;
+    background:
+      linear-gradient(180deg, rgba(245, 248, 242, 0.86), rgba(255, 255, 255, 0) 34rem),
+      #ffffff;
+  }
 
-body {
-  color: #1f2328;
-  background:
-    linear-gradient(180deg, rgba(245, 248, 242, 0.86), rgba(255, 255, 255, 0) 34rem),
-    #ffffff;
+  /* Typography hierarchy */
+  h1 { @apply text-4xl font-bold tracking-tight sm:text-5xl; }
+  h2 { @apply text-2xl font-semibold tracking-tight sm:text-3xl; }
+  h3 { @apply text-xl font-semibold tracking-tight; }
+  h4 { @apply text-lg font-semibold; }
+
+  p  { @apply leading-relaxed; }
+
+  /* Inputs inherit font */
+  input, textarea, select, button { font: inherit; }
 }
 
 body::before {
@@ -41,7 +53,7 @@ body::before {
 }
 
 .eyebrow {
-  @apply text-sm font-semibold uppercase tracking-wide text-pruksa-green;
+  @apply text-xs font-semibold uppercase tracking-widest text-pruksa-green;
 }
 
 .card {
@@ -88,19 +100,19 @@ body::before {
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg bg-pruksa-green px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-pruksa-green/20 transition hover:-translate-y-0.5 hover:bg-[#4c9128] hover:shadow-xl hover:shadow-pruksa-green/30;
+  @apply inline-flex items-center justify-center gap-2 rounded-lg bg-pruksa-green px-5 py-3 text-sm font-medium tracking-tight text-white shadow-lg shadow-pruksa-green/20 transition hover:-translate-y-0.5 hover:bg-[#4c9128] hover:shadow-xl hover:shadow-pruksa-green/30;
 }
 
 .btn-secondary {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-black/10 bg-white px-5 py-3 text-sm font-semibold text-pruksa-ink transition hover:-translate-y-0.5 hover:border-pruksa-green hover:text-pruksa-green;
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-black/10 bg-white px-5 py-3 text-sm font-medium tracking-tight text-pruksa-ink transition hover:-translate-y-0.5 hover:border-pruksa-green hover:text-pruksa-green;
 }
 
 .input {
-  @apply w-full rounded-lg border border-black/10 bg-white px-3 py-3 text-sm outline-none transition focus:border-pruksa-green focus:ring-2 focus:ring-pruksa-green/20;
+  @apply w-full rounded-lg border border-black/10 bg-white px-3 py-3 text-sm font-normal outline-none transition focus:border-pruksa-green focus:ring-2 focus:ring-pruksa-green/20;
 }
 
 .badge {
-  @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+  @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium tracking-wide;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
