@@ -137,7 +137,7 @@ export default function HomePage() {
       </Reveal>
 
       <section className="container-page">
-        <div className="rounded-2xl bg-pruksa-teal p-8 text-white md:flex md:items-center md:justify-between">
+        <div className="rounded-2xl p-8 text-white backdrop-blur-md md:flex md:items-center md:justify-between" style={{ backgroundColor: "#0A6B2C" }}>
           <div>
             <h2 className="text-2xl font-semibold">{locale === "th" ? "ต้องการข้อมูลเพิ่มเติม?" : "Need more information?"}</h2>
             <p className="mt-2 text-white/80">Phone 1739 · LINE @pruksarent · rent@pruksa.com</p>
