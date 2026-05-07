@@ -38,6 +38,13 @@ export default function RentPage() {
   const th = locale === "th";
 
   const [type, setType] = useState<"all" | LivingType>("all");
+
+  // Read ?type= from URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get("type") as LivingType | null;
+    if (t && t in livingTypeLabels) setType(t);
+  }, []);
   const [brand, setBrand] = useState("all");
   const [bed, setBed] = useState("any");
   const [amenities, setAmenities] = useState<string[]>([]);
