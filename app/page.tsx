@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Building2, Home, Search, TrainFront, Trees, type LucideIcon } from "lucide-react";
 import { blogs, projects, promotions } from "@/lib/data";
 import { baht, copy, livingTypeLabels } from "@/lib/i18n";
 import type { LivingType } from "@/lib/types";
 import { useApp } from "@/components/app-providers";
+import { HeroBanner } from "@/components/hero-banner";
 import { MapPreview } from "@/components/map-preview";
 import { ProjectCard } from "@/components/project-card";
 import { Reveal } from "@/components/reveal";
@@ -29,47 +29,16 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="relative overflow-hidden pruksa-aurora">
-        <div className="absolute inset-0 -z-10 premium-grid opacity-60" />
-        <div className="container-page grid min-h-[680px] items-center gap-10 py-12 lg:grid-cols-[1fr_520px]">
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="eyebrow">Pruksa Rental Website</p>
-            <h1 className="mt-5 max-w-3xl text-5xl font-semibold leading-tight sm:text-6xl">
-              {locale === "th" ? "เช่าบ้านในแบบที่คุณเป็น" : "Rent the home that fits your life"}
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-black/68">
-              {locale === "th"
-                ? "ค้นหาโครงการเช่าของ Pruksa ครบทุก Living Type พร้อม Lead, Favorite, Compare และ Booking Flow ในเว็บเดียว"
-                : "Search Pruksa rental projects across living types with lead capture, favorites, compare and booking in one experience."}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/rent" className="btn-primary"><Search size={18} />{t.findHome}</Link>
-              <Link href="/about" className="btn-secondary">{locale === "th" ? "ดูภาพรวมระบบ" : "View system overview"}</Link>
-            </div>
-          </motion.div>
-          <div className="glass float-soft overflow-hidden rounded-[28px] p-3">
-            <div className="image-sheen rounded-2xl">
-              <img src="https://static.pruksa.com/R-Desktop-2304x1296.jpg" alt="Pruksa rental home" className="h-[420px] w-full rounded-2xl object-cover" />
-              <div className="absolute bottom-5 left-5 right-5 rounded-2xl bg-black/40 p-5 text-white backdrop-blur">
-                <p className="text-sm text-white/75">Campaign-ready hero · image/video support</p>
-                <h2 className="mt-1 text-2xl font-semibold">Well Living Rental Experience</h2>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 divide-x divide-black/5 text-center">
-              <div className="p-4"><strong>12</strong><p className="text-xs text-black/60">Projects</p></div>
-              <div className="p-4"><strong>72</strong><p className="text-xs text-black/60">Mock units</p></div>
-              <div className="p-4"><strong>1739</strong><p className="text-xs text-black/60">Contact</p></div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ── Fullscreen Hero Banner ── */}
+      <HeroBanner />
 
-      <section className="container-page -mt-20 relative z-10">
-        <div className="glass rounded-2xl p-5">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      {/* ── Smart Search Bar ── */}
+      <section className="container-page relative z-10 -mt-16 sm:-mt-20">
+        <div className="glass rounded-2xl p-4 sm:p-5">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-2">
               {[t.btsMrt, t.location, t.nearMe, t.mapView].map((label, index) => (
-                <button key={label} className={`rounded-lg px-4 py-2 text-sm font-semibold ${index === 0 ? "bg-pruksa-green text-white" : "bg-black/5"}`}>{label}</button>
+                <button key={label} className={`rounded-lg px-3 py-1.5 text-xs font-semibold sm:px-4 sm:py-2 sm:text-sm ${index === 0 ? "bg-pruksa-green text-white" : "bg-black/5"}`}>{label}</button>
               ))}
             </div>
             <p className="hidden text-xs text-black/40 sm:block">{locale === "th" ? "ค้นหาได้ทุกอย่างในช่องเดียว" : "Search everything in one place"}</p>
